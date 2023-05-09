@@ -1,0 +1,31 @@
+version: "3.3"
+
+services:
+
+  traefik:
+    image: "traefik:v2.10"
+    container_name: "traefik"
+    networks:
+      - ingress-pool
+      - default
+    ports:
+      - "80:80"
+      - "8580:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./traefik:/etc/traefik/"
+
+  whoami:
+    image: "traefik/whoami"
+    container_name: "simple-service"
+    networks:
+      - ingress-pool
+    labels:
+      - "traefik.enable=true"
+#      - "traefik.http.routers.whoami.rule=Host(`whoami.localhost`)"
+#      - "traefik.http.routers.whoami.entrypoints=web"
+networks:
+  ingress-pool:
+    name: ingress-pool
+#    driver: bridge
+    attachable: true
