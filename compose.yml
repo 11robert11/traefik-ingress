@@ -8,12 +8,19 @@ services:
     networks:
       - ingress-pool
       - default
+    command: 
+      - "--providers.docker.defaultRule=Host(`{{ .Name }}.{{ index .Labels \"com.docker.compose.project\"}}.${ROOT_DOMAIN}`)"
+      - "--api.insecure=true"
+      - "--providers.docker"
+      - "--entrypoints.web.address=:80"
+      - "--providers.docker.constraints=Label(`traefik.http.routers.whoami.rule`,``)"
+      - "--providers.docker.network=ingress-pool"
     ports:
       - "80:80"
       - "8580:8080"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - "./traefik:/etc/traefik/"
+#      - "./traefik:/etc/traefik/"
 
   whoami:
     image: "traefik/whoami"
@@ -22,8 +29,8 @@ services:
       - ingress-pool
     labels:
       - "traefik.enable=true"
-#      - "traefik.http.routers.whoami.rule=Host(`whoami.localhost`)"
-#      - "traefik.http.routers.whoami.entrypoints=web"
+      - "traefik.http.routers.whoami.rule=Host(`whoami.localhost`)"
+      - "traefik.http.routers.whoami.entrypoints=web"
 networks:
   ingress-pool:
     name: ingress-pool
