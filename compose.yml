@@ -9,7 +9,11 @@ services:
       - ingress-pool
       - default
     command: 
-      - "--providers.docker.defaultRule=Host(`{{ .Name }}.{{ index .Labels \"com.docker.compose.project\"}}.${ROOT_DOMAIN}`)"
+      #- "--log.level=DEBUG"
+      - "--providers.docker.defaultRule=Host(`\
+        {{ index .Labels \"com.docker.compose.service\"}}.\
+        {{ index .Labels \"com.docker.compose.project\"}}.\
+        ${ROOT_DOMAIN}`)"
       - "--api.insecure=true"
       - "--providers.docker"
       - "--entrypoints.web.address=:80"
