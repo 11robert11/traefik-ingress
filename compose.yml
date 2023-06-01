@@ -25,16 +25,6 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 #      - "./traefik:/etc/traefik/"
-
-  whoami:
-    image: "traefik/whoami"
-    container_name: "simple-service"
-    networks:
-      - ingress-pool
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.whoami.rule=Host(`whoami.localhost`)"
-      - "traefik.http.routers.whoami.entrypoints=web"
 networks:
   ingress-pool:
     name: ingress-pool
